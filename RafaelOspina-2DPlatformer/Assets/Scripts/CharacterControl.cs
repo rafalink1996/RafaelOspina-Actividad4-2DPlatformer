@@ -10,10 +10,11 @@ public class CharacterControl : MonoBehaviour {
 	public Text contadorCoins;
 	public float jumpForce;
 	bool isGrounded = false;
+	Animator anim;
 
 	// Use this for initialization
 	void Start () {
-		
+		anim = GetComponent <Animator> ();
 	}
 
 	/*public void clickEnElBoton() {
@@ -26,13 +27,22 @@ public class CharacterControl : MonoBehaviour {
 		//movimiento a la derecha
 		if (Input.GetKey (KeyCode.RightArrow)) {
 			this.gameObject.transform.Translate (speed * Time.deltaTime, 0, 0);
+			anim.SetBool ("Right", true);
+			anim.SetBool ("Left", false);
 			//this.gameObject.transform.Translate (Vector2.left * -speed * Time.deltaTime, Space.World); // esta es otra opcion
 		}
 		//movimiento a la izquierda
 		if (Input.GetKey (KeyCode.LeftArrow)) {
 			this.gameObject.transform.Translate (-speed * Time.deltaTime, 0, 0);
+			anim.SetBool ("Right", false);
+			anim.SetBool ("Left", true);
 			//this.gameObject.transform.Translate (Vector2.right * -speed * Time.deltaTime, Space.World); // esta es otra opcion
 		} 
+		if (Input.GetKey (KeyCode.RightArrow) || Input.GetKey (KeyCode.LeftArrow)) {
+			anim.SetBool ("isMoving", true);
+		} else {
+			anim.SetBool ("isMoving", false);
+		}
 		//salto
 		if (Input.GetKeyDown (KeyCode.Space) && isGrounded == true) {
 			this.gameObject.GetComponent <Rigidbody2D> ().AddForce (Vector2.up * jumpForce, ForceMode2D.Impulse); // le agregamos una fuerza hacia arriba
@@ -56,11 +66,13 @@ public class CharacterControl : MonoBehaviour {
 	void OnCollisionEnter2D (Collision2D collision) {
 		if (collision.collider.gameObject.tag == "Ground") {
 			isGrounded = true;
+			anim.SetBool ("Jump", false);
 		}
 	}
 	void OnCollisionExit2D (Collision2D collision) {
 		if (collision.collider.gameObject.tag == "Ground") {
 			isGrounded = false;
+			anim.SetBool ("Jump", true);
 		}
 	}
 
