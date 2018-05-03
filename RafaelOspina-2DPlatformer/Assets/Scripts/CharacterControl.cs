@@ -11,10 +11,16 @@ public class CharacterControl : MonoBehaviour {
 	public float jumpForce;
 	bool isGrounded = false;
 	Animator anim;
+	public AudioClip coin;
+	public AudioClip jump;
+	public AudioClip death;
+	//public float volume;
+	AudioSource audio;
 
 	// Use this for initialization
 	void Start () {
 		anim = GetComponent <Animator> ();
+		audio = GetComponent <AudioSource> ();
 	}
 
 	/*public void clickEnElBoton() {
@@ -46,6 +52,7 @@ public class CharacterControl : MonoBehaviour {
 		//salto
 		if (Input.GetKeyDown (KeyCode.Space) && isGrounded == true) {
 			this.gameObject.GetComponent <Rigidbody2D> ().AddForce (Vector2.up * jumpForce, ForceMode2D.Impulse); // le agregamos una fuerza hacia arriba
+			audio.PlayOneShot (jump, 1);
 		}
 		
 	}
@@ -58,9 +65,13 @@ public class CharacterControl : MonoBehaviour {
 			// mostramos la cantidad de monedas usando el componente Text
 			contadorCoins.text = coins.ToString();
 
+			audio.PlayOneShot (coin, 1);
+
 			//Destruimos la moneda
 			GameObject.Destroy (coll.gameObject);
-		
+		}
+		if (coll.gameObject.tag == "Death") {
+			audio.PlayOneShot (death, 3);
 		}
 	}
 	void OnCollisionEnter2D (Collision2D collision) {

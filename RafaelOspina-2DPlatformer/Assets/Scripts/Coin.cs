@@ -6,7 +6,7 @@ public class Coin : MonoBehaviour {
 
 	public AudioClip clip;
 	public float volume;
-	AudioSource sonido;
+	AudioSource audio;
 	bool alreadyPlayed = false;
 
 
@@ -16,10 +16,11 @@ public class Coin : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void OnTriggerEnter2D () {
-		if (alreadyPlayed == false) {
+	void OnTriggerEnter2D (Collider2D other) {
+		audio.Play ();
+		/*if (alreadyPlayed == false) {
 			sonido.PlayOneShot (clip, volume);
 			alreadyPlayed = true;
-		}
+		}*/
 	}
 }
