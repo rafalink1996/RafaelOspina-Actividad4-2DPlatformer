@@ -7,11 +7,16 @@ public class CharacterControl : MonoBehaviour {
 
 	public float speed;
 	int coins = 0; // cantidad de monedas
+	int hearts = 3;
+	int stars = 0;
 	public Text contadorCoins;
+	public Text contadorHearts;
+	public Text contadorStars;
 	public float jumpForce;
 	bool isGrounded = false;
 	Animator anim;
 	public AudioClip coin;
+	public AudioClip heart;
 	public AudioClip jump;
 	public AudioClip death;
 	//public float volume;
@@ -59,13 +64,35 @@ public class CharacterControl : MonoBehaviour {
 	//Cuando el collider 2D del gameObject colisiona con otro collider 2D
 	// Es muy importante que sea 2D. Si es 3D no se detecta
 	void OnTriggerEnter2D(Collider2D coll) {
-		if (coll.gameObject.tag == "Coin") { //Detectamos colision solo con monedas
+		if (coll.gameObject.tag == "Coins") { //Detectamos colision solo con monedas
 			// aumentar la cantidad de monedas
 			coins = coins + 1;
 			// mostramos la cantidad de monedas usando el componente Text
 			contadorCoins.text = coins.ToString();
 
 			audio.PlayOneShot (coin, 1);
+
+			//Destruimos la moneda
+			GameObject.Destroy (coll.gameObject);
+		}
+		if (coll.gameObject.tag == "Hearts") { //Detectamos colision solo con monedas
+			// aumentar la cantidad de monedas
+			hearts = hearts + 1;
+			// mostramos la cantidad de monedas usando el componente Text
+			contadorHearts.text = hearts.ToString();
+
+			audio.PlayOneShot (heart, 3);
+
+			//Destruimos la moneda
+			GameObject.Destroy (coll.gameObject);
+		}
+		if (coll.gameObject.tag == "Stars") { //Detectamos colision solo con monedas
+			// aumentar la cantidad de monedas
+			stars = stars + 1;
+			// mostramos la cantidad de monedas usando el componente Text
+			contadorStars.text = stars.ToString();
+
+			//audio.PlayOneShot (heart, 3);
 
 			//Destruimos la moneda
 			GameObject.Destroy (coll.gameObject);
@@ -78,6 +105,12 @@ public class CharacterControl : MonoBehaviour {
 		if (collision.collider.gameObject.tag == "Ground") {
 			isGrounded = true;
 			anim.SetBool ("Jump", false);
+		}
+		if (collision.collider.gameObject.tag == "Enemies") {
+			hearts = hearts - 1;
+			contadorHearts.text = hearts.ToString ();
+			this.gameObject.GetComponent <Rigidbody2D> ().AddForce (Vector2.left * 12, ForceMode2D.Impulse);
+			GameObject.Destroy (collision.gameObject);
 		}
 	}
 	void OnCollisionExit2D (Collision2D collision) {
