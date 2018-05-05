@@ -11,6 +11,8 @@ TagManager:
   - Coins
   - Stars
   - Enemies
+  - Left
+  - Right
   layers:
   - Default
   - TransparentFX

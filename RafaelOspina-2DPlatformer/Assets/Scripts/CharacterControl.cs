@@ -18,6 +18,8 @@ public class CharacterControl : MonoBehaviour {
 	public AudioClip coin;
 	public AudioClip heart;
 	public AudioClip jump;
+	public AudioClip star;
+	public AudioClip hit;
 	public AudioClip death;
 	//public float volume;
 	AudioSource audio;
@@ -92,7 +94,7 @@ public class CharacterControl : MonoBehaviour {
 			// mostramos la cantidad de monedas usando el componente Text
 			contadorStars.text = stars.ToString();
 
-			//audio.PlayOneShot (heart, 3);
+			audio.PlayOneShot (star, 1);
 
 			//Destruimos la moneda
 			GameObject.Destroy (coll.gameObject);
@@ -110,6 +112,7 @@ public class CharacterControl : MonoBehaviour {
 			hearts = hearts - 1;
 			contadorHearts.text = hearts.ToString ();
 			this.gameObject.GetComponent <Rigidbody2D> ().AddForce (Vector2.left * 12, ForceMode2D.Impulse);
+			audio.PlayOneShot (hit, 1);
 			GameObject.Destroy (collision.gameObject);
 		}
 	}
