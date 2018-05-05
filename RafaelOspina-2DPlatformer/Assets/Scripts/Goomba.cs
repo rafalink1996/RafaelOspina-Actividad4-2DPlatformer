@@ -17,11 +17,14 @@ public class Goomba : MonoBehaviour {
 		
 	}
 	void OnTriggerEnter2D (Collider2D goomba) {
-		if (goomba.gameObject.tag == "Left") {
+		/*if (goomba.gameObject.tag == "Left") {
 			speed = 1;
 		}
 		if (goomba.gameObject.tag == "Right") {
 			speed = -1;
+		}*/
+		if (goomba.gameObject.tag == "Edge") {
+			speed = speed * -1;
 		}
 	}
 }

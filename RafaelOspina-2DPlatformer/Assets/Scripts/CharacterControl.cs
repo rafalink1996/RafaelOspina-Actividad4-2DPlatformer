@@ -21,8 +21,11 @@ public class CharacterControl : MonoBehaviour {
 	public AudioClip star;
 	public AudioClip hit;
 	public AudioClip death;
+	public AudioClip finish;
 	//public float volume;
 	AudioSource audio;
+	bool isAlive = true;
+	int deathTimer = 1;
 
 	// Use this for initialization
 	void Start () {
@@ -38,14 +41,14 @@ public class CharacterControl : MonoBehaviour {
 	void Update () {
 		//en el componente de rigidbody 2d tenemos que activar el constraint en el eje Z para que no rote y el movimiento quede bien
 		//movimiento a la derecha
-		if (Input.GetKey (KeyCode.RightArrow)) {
+		if (Input.GetKey (KeyCode.RightArrow) && isAlive == true) {
 			this.gameObject.transform.Translate (speed * Time.deltaTime, 0, 0);
 			anim.SetBool ("Right", true);
 			anim.SetBool ("Left", false);
 			//this.gameObject.transform.Translate (Vector2.left * -speed * Time.deltaTime, Space.World); // esta es otra opcion
 		}
 		//movimiento a la izquierda
-		if (Input.GetKey (KeyCode.LeftArrow)) {
+		if (Input.GetKey (KeyCode.LeftArrow) && isAlive == true) {
 			this.gameObject.transform.Translate (-speed * Time.deltaTime, 0, 0);
 			anim.SetBool ("Right", false);
 			anim.SetBool ("Left", true);
@@ -57,11 +60,20 @@ public class CharacterControl : MonoBehaviour {
 			anim.SetBool ("isMoving", false);
 		}
 		//salto
-		if (Input.GetKeyDown (KeyCode.Space) && isGrounded == true) {
+		if (Input.GetKeyDown (KeyCode.Space) && isGrounded == true && isAlive == true) {
 			this.gameObject.GetComponent <Rigidbody2D> ().AddForce (Vector2.up * jumpForce, ForceMode2D.Impulse); // le agregamos una fuerza hacia arriba
 			audio.PlayOneShot (jump, 1);
 		}
-		
+		if (hearts == 0) {
+			isAlive = false;
+			anim.SetBool ("Dead", true);
+		}
+		if (isAlive == false) {
+			deathTimer = deathTimer - 1;
+		}
+		if (deathTimer == 0) {
+			audio.PlayOneShot (death, 3);
+		}
 	}
 	//Cuando el collider 2D del gameObject colisiona con otro collider 2D
 	// Es muy importante que sea 2D. Si es 3D no se detecta
@@ -100,7 +112,11 @@ public class CharacterControl : MonoBehaviour {
 			GameObject.Destroy (coll.gameObject);
 		}
 		if (coll.gameObject.tag == "Death") {
-			audio.PlayOneShot (death, 3);
+			isAlive = false;
+		}
+		if (coll.gameObject.tag == "Finish") {
+			audio.PlayOneShot (finish, 8);
+			GameObject.Destroy (coll.gameObject);
 		}
 	}
 	void OnCollisionEnter2D (Collision2D collision) {
